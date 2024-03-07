@@ -4,7 +4,7 @@ document.getElementById('insertForm').addEventListener('submit', function(e) {
     const name = document.getElementById('name').value;
     const dateOfBirth = document.getElementById('dateOfBirth').value;
     
-    fetch('http://nainzhou.com/comp4537lab5/backend', {
+    fetch('https://nainzhou.com/comp4537lab5/backend', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -29,7 +29,7 @@ document.getElementById('queryForm').addEventListener('submit', function(e) {
     
     const patientId = document.getElementById('patientId').value;
     
-    fetch(`http://nainzhou.com/comp4537lab5/backend?patientid=${patientId}`, {
+    fetch(`https://nainzhou.com/comp4537lab5/backend?patientid=${patientId}`, {
         method: 'GET',
     })
     .then(response => response.json())
