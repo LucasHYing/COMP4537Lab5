@@ -6,19 +6,13 @@
     <title>Patient Data Management</title>
 </head>
 <body>
-    <h2>Insert New Patient</h2>
-    <form id="insertForm">
-        <input type="text" id="name" placeholder="Name" required>
-        <input type="date" id="dateOfBirth" placeholder="Date of Birth" required>
-        <button type="submit">Insert Patient</button>
-    </form>
-
-    <h2>Get Patient Data</h2>
-    <form id="queryForm">
-        <input type="number" id="patientId" placeholder="Patient ID" required>
-        <button type="submit">Get Patient Data</button>
-    </form>
-
+    <h2>Insert Patient Data</h2>
+    <button id="insertDataButton">Insert Data</button>
+    
+    <h2>Submit SQL Query</h2>
+    <textarea id="sqlQuery" placeholder="Write your SQL query here"></textarea>
+    <button id="submitQueryButton">Submit Query</button>
+    
     <div id="result"></div>
 
     <script src="script.js"></script>
