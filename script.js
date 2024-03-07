@@ -1,6 +1,6 @@
 // Storing strings at the top as constants
-const INSERT_API_URL = 'https://YourDomain.xyz/lab5/api/v1/insert';
-const QUERY_API_URL = 'https://YourDomain.xyz/lab5/api/v1/query';
+const INSERT_API_URL = 'http://nainzhou.com/comp4537lab5/backend';
+const QUERY_API_URL = 'http://nainzhou.com/comp4537lab5/backend';
 
 const insertData = () => {
     // Data to be inserted
