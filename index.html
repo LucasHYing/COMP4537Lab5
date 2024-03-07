@@ -1,12 +1,25 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Client Side - Lab 5</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Data Management</title>
 </head>
 <body>
-    <button onclick="insertData()">Insert Data</button>
-    <textarea id="sqlQuery"></textarea>
-    <button onclick="submitQuery()">Submit Query</button>
+    <h2>Insert New Patient</h2>
+    <form id="insertForm">
+        <input type="text" id="name" placeholder="Name" required>
+        <input type="date" id="dateOfBirth" placeholder="Date of Birth" required>
+        <button type="submit">Insert Patient</button>
+    </form>
+
+    <h2>Get Patient Data</h2>
+    <form id="queryForm">
+        <input type="number" id="patientId" placeholder="Patient ID" required>
+        <button type="submit">Get Patient Data</button>
+    </form>
+
+    <div id="result"></div>
 
     <script src="script.js"></script>
 </body>
