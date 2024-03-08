@@ -33,38 +33,21 @@ document.addEventListener('DOMContentLoaded', function() {
 
     submitQueryButton.addEventListener('click', function() {
         const sqlQuery = sqlQueryTextArea.value.trim();
-        const isSelectQuery = sqlQuery.toLowerCase().startsWith('select');
 
-        if (isSelectQuery) {
-            // Send a GET request for SELECT queries
-            const encodedSqlQuery = encodeURIComponent(sqlQuery);
-            fetch(`${API_URL}?query=${encodedSqlQuery}`, {
-                method: 'GET',
-            })
-            .then(response => response.json())
-            .then(data => {
-                displayResults(data);
-            })
-            .catch((error) => {
-                resultDiv.textContent = `Query error: ${error.message}`;
-            });
-        } else {
-            // Send a POST request for INSERT (and other non-SELECT) queries
-            fetch(API_URL, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ query: sqlQuery }),
-            })
-            .then(response => response.json())
-            .then(data => {
-                displayResults(data);
-            })
-            .catch((error) => {
-                resultDiv.textContent = `Query error: ${error.message}`;
-            });
-        }
+        fetch(`${API_URL}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ query: sqlQuery }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            resultDiv.textContent = `Query response: ${JSON.stringify(data)}`;
+        })
+        .catch((error) => {
+            resultDiv.textContent = `Query error: ${error.message}`;
+        });
     });
 
     function displayResults(data) {
