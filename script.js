@@ -48,13 +48,19 @@ document.addEventListener('DOMContentLoaded', function() {
                 .catch((error) => {
                     resultDiv.textContent = `Query error: ${error.message}`;
                 });
-            }else {
+            } else {
+                // Assuming the server is expecting an array of patient objects
+                const patientDataArray = [{
+                    name: 'John Doe',
+                    dateOfBirth: '1990-05-15'
+                }];
+            
                 fetch(`${API_URL}/insert`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ query: sqlQuery }),
+                    body: JSON.stringify(patientDataArray),
                 })
                 .then(response => response.json())
                 .then(data => {
@@ -63,7 +69,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 .catch((error) => {
                     resultDiv.textContent = `Insert error: ${error.message}`;
                 });
-            }            
+            }  
         });
 
     function displayResults(data) {
