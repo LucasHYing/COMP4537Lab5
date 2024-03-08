@@ -1,7 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
     const insertDataButton = document.getElementById('insertDataButton');
     const submitQueryButton = document.getElementById('submitQueryButton');
-    const getAllPatientsButton = document.getElementById('getAllPatientsButton');
     const sqlQueryTextArea = document.getElementById('sqlQuery');
     const resultDiv = document.getElementById('result');
 
@@ -56,7 +55,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     const patientData = JSON.parse(sqlQuery);
 
                     // Send a POST request with the patient data array
-                    fetch(`${API_URL}/insert`, {
+                    fetch(`${API_URL}/comp4537lab5/backend/insert`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
