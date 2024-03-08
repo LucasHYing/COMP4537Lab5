@@ -4,23 +4,20 @@ document.addEventListener('DOMContentLoaded', function() {
     const sqlQueryTextArea = document.getElementById('sqlQuery');
     const resultDiv = document.getElementById('result');
 
-    const INSERT_API_URL = 'http://localhost:3050/comp4537lab5/backend/insert';
-    const QUERY_API_URL = 'http://localhost:3050/comp4537lab5/backend/';
+    const API_URL = 'https://nainzhou.com/comp4537lab5/backend'; // Change to your server's domain
 
     insertDataButton.addEventListener('click', function() {
-        const patients = [
-            { name: 'Sara Brown', dateOfBirth: '1901-01-01' },
-            { name: 'John Smith', dateOfBirth: '1941-01-01' },
-            { name: 'Jack Ma', dateOfBirth: '1961-01-30' },
-            { name: 'Elon Musk', dateOfBirth: '1999-01-01' }
-        ];
-
-        fetch(INSERT_API_URL, {
+        fetch(API_URL, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(patients),
+            body: JSON.stringify([
+                { name: 'Sara Brown', dateOfBirth: '1901-01-01' },
+                { name: 'John Smith', dateOfBirth: '1941-01-01' },
+                { name: 'Jack Ma', dateOfBirth: '1961-01-30' },
+                { name: 'Elon Musk', dateOfBirth: '1999-01-01' }
+            ]),
         })
         .then(response => response.json())
         .then(data => {
@@ -34,11 +31,15 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     submitQueryButton.addEventListener('click', function() {
-        const sqlQuery = sqlQueryTextArea.value.trim();
-        const encodedSqlQuery = encodeURIComponent(sqlQuery);
+        const query = sqlQueryTextArea.value.trim();
+        const isSelect = query.toLowerCase().startsWith('select');
 
-        fetch(`${QUERY_API_URL}${encodedSqlQuery}`, {
-            method: 'GET',
+        fetch(API_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ query: query }),
         })
         .then(response => response.json())
         .then(data => {
