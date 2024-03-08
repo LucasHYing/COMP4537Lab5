@@ -33,36 +33,48 @@ document.addEventListener('DOMContentLoaded', function() {
 
     submitQueryButton.addEventListener('click', function() {
         const sqlQuery = sqlQueryTextArea.value.trim();
-        const endpoint = sqlQuery.toLowerCase().startsWith('select') ? 'select' : 'insert';
-        const method = sqlQuery.toLowerCase().startsWith('select') ? 'GET' : 'POST';
+        const isSelectQuery = sqlQuery.toLowerCase().startsWith('select');
 
-        fetch(`${API_URL}/${endpoint}`, {
-            method: method,
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: method === 'POST' ? JSON.stringify({ query: sqlQuery }) : null,
-        })
-        .then(response => response.json())
-        .then(data => {
+        if (isSelectQuery) {
+            // Send a GET request for SELECT queries
+            const encodedSqlQuery = encodeURIComponent(sqlQuery);
+            fetch(`${API_URL}?query=${encodedSqlQuery}`, {
+                method: 'GET',
+            })
+            .then(response => response.json())
+            .then(data => {
+                displayResults(data);
+            })
+            .catch((error) => {
+                resultDiv.textContent = `Query error: ${error.message}`;
+            });
+        } else {
+            // Send a POST request for INSERT (and other non-SELECT) queries
+            fetch(API_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ query: sqlQuery }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                displayResults(data);
+            })
+            .catch((error) => {
+                resultDiv.textContent = `Query error: ${error.message}`;
+            });
+        }
+    });
+
+    function displayResults(data) {
+        if (Array.isArray(data)) {
+            // Handle the display of an array (e.g., results of a SELECT query)
+            resultDiv.innerHTML = '<h3>Query Results:</h3>' + 
+            data.map(row => JSON.stringify(row)).join('<br>');
+        } else {
+            // Handle the display of a single result object (e.g., result of an INSERT query)
             resultDiv.textContent = `Query response: ${JSON.stringify(data)}`;
-        })
-        .catch((error) => {
-            resultDiv.textContent = `Query error: ${error.message}`;
-        });
-    });
-
-    getAllPatientsButton.addEventListener('click', function() {
-        fetch(`${API_URL}/select%20*%20from%20patient`, {
-            method: 'GET'
-        })
-        .then(response => response.json())
-        .then(data => {
-            resultDiv.innerHTML = '<h3>Patients List:</h3>' + 
-            data.map(patient => `ID: ${patient.patientid}, Name: ${patient.name}, Date of Birth: ${patient.dateOfBirth}`).join('<br>');
-        })
-        .catch((error) => {
-            resultDiv.textContent = `Error fetching patients: ${error.message}`;
-        });
-    });
+        }
+    }
 });
