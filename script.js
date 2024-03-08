@@ -48,32 +48,22 @@ document.addEventListener('DOMContentLoaded', function() {
                 .catch((error) => {
                     resultDiv.textContent = `Query error: ${error.message}`;
                 });
-            } else {
-                // The body now needs to be an array of patient objects
-                try {
-                    // Attempt to parse the input as an array of patient objects
-                    const patientData = JSON.parse(sqlQuery);
-
-                    // Send a POST request with the patient data array
-                    fetch(`${API_URL}/comp4537lab5/backend/insert`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(patientData), // This should be an array of objects
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        displayResults(data);
-                    })
-                    .catch((error) => {
-                        resultDiv.textContent = `Query error: ${error.message}`;
-                    });
-                } catch(e) {
-                    // If parsing fails, inform the user
-                    resultDiv.textContent = `Insert error: Invalid input format. Please provide a valid JSON array of patient objects.`;
-                }
-            }
+            }else {
+                fetch(`${API_URL}/insert`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ query: sqlQuery }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    displayResults(data);
+                })
+                .catch((error) => {
+                    resultDiv.textContent = `Insert error: ${error.message}`;
+                });
+            }            
         });
 
     function displayResults(data) {
