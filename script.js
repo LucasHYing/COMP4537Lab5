@@ -4,8 +4,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const sqlQueryTextArea = document.getElementById('sqlQuery');
     const resultDiv = document.getElementById('result');
 
-    const INSERT_API_URL = 'https://nainzhou.com/comp4537lab5/backend';
-    const QUERY_API_URL = 'https://nainzhou.com/comp4537lab5/backend'; // Adjust if necessary for different endpoints
+    const INSERT_API_URL = 'http://localhost:3050/comp4537lab5/backend/insert';
+    const QUERY_API_URL = 'http://localhost:3050/comp4537lab5/backend/';
 
     insertDataButton.addEventListener('click', function() {
         const patients = [
@@ -15,45 +15,39 @@ document.addEventListener('DOMContentLoaded', function() {
             { name: 'Elon Musk', dateOfBirth: '1999-01-01' }
         ];
 
-        patients.forEach(patient => {
-            fetch(INSERT_API_URL, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(patient),
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Patient inserted:', data);
-                resultDiv.textContent += `Patient inserted successfully. Insert ID: ${data.insertId}\n`;
-            })
-            .catch((error) => {
-                console.error('Insertion error:', error);
-                resultDiv.textContent += `Error: ${error}\n`;
-            });
+        fetch(INSERT_API_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(patients),
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Insert response:', data);
+            resultDiv.textContent += `Patients inserted successfully.\n`;
+        })
+        .catch((error) => {
+            console.error('Insert error:', error);
+            resultDiv.textContent += `Insert error: ${error}\n`;
         });
     });
 
     submitQueryButton.addEventListener('click', function() {
         const sqlQuery = sqlQueryTextArea.value.trim();
-        const isSelectQuery = sqlQuery.toLowerCase().startsWith('select');
-        
-        fetch(isSelectQuery ? QUERY_API_URL : INSERT_API_URL, {
-            method: isSelectQuery ? 'GET' : 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: isSelectQuery ? null : JSON.stringify({ query: sqlQuery }),
+        const encodedSqlQuery = encodeURIComponent(sqlQuery);
+
+        fetch(`${QUERY_API_URL}${encodedSqlQuery}`, {
+            method: 'GET',
         })
         .then(response => response.json())
         .then(data => {
-            console.log('Query success:', data);
+            console.log('Query response:', data);
             resultDiv.innerHTML = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
         })
         .catch((error) => {
             console.error('Query error:', error);
-            resultDiv.textContent += `Error: ${error}\n`;
+            resultDiv.textContent += `Query error: ${error}\n`;
         });
     });
 });
