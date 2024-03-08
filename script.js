@@ -50,13 +50,16 @@ document.addEventListener('DOMContentLoaded', function() {
                     resultDiv.textContent = `Query error: ${error.message}`;
                 });
             } else {
-                // Send a POST request for INSERT queries
+                // Attempt to parse the input as an array of patient objects
+                const patientData = JSON.parse(sqlQuery);
+
+                // Send a POST request with the patient data array
                 fetch(`${API_URL}/insert`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ query: sqlQuery }),
+                    body: JSON.stringify(patientData), // This should be an array of objects
                 })
                 .then(response => response.json())
                 .then(data => {
