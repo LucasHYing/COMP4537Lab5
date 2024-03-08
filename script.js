@@ -34,6 +34,7 @@ document.addEventListener('DOMContentLoaded', function() {
         submitQueryButton.addEventListener('click', function() {
             const sqlQuery = sqlQueryTextArea.value.trim();
             const isSelectQuery = sqlQuery.toLowerCase().startsWith('select');
+            const inputData = sqlQueryTextArea.value.trim().split(',');
     
             if (isSelectQuery) {
                 // Encode and send a GET request for SELECT queries
@@ -49,26 +50,36 @@ document.addEventListener('DOMContentLoaded', function() {
                     resultDiv.textContent = `Query error: ${error.message}`;
                 });
             } else {
-                // Assuming the server is expecting an array of patient objects
-                const patientDataArray = [{
-                    name: 'John Doe',
-                    dateOfBirth: '1990-05-15'
-                }];
-            
-                fetch(`${API_URL}/insert`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(patientDataArray),
-                })
-                .then(response => response.json())
-                .then(data => {
-                    displayResults(data);
-                })
-                .catch((error) => {
-                    resultDiv.textContent = `Insert error: ${error.message}`;
-                });
+                // Ensure there are exactly two parts: name and date of birth
+                    if (inputData.length === 2) {
+                        const patientName = inputData[0].trim();
+                        const patientDOB = inputData[1].trim();
+
+                        // Create an object in the format expected by the server
+                        const patientDataArray = [{
+                            name: patientName,
+                            dateOfBirth: patientDOB
+                        }];
+
+                        // Send this object to the server
+                        fetch(`${API_URL}/insert`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(patientDataArray),
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            displayResults(data);
+                        })
+                        .catch((error) => {
+                            resultDiv.textContent = `Insert error: ${error.message}`;
+                        });
+
+                    } else {
+                        resultDiv.textContent = 'Please enter the name and date of birth separated by a comma.';
+                    }
             }  
         });
 
